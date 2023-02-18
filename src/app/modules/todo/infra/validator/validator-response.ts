@@ -1,4 +1,4 @@
 export interface ValidatorResponse {
-  errors: any[];
-  success: any[];
+  isValid: boolean;
+  errors?: any[];
 }

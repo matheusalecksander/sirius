@@ -23,7 +23,10 @@ function makeSut() {
     description: "Teste"
   }
 
-  const invalidNameAndDescription = {}
+  const invalidNameAndDescription = {
+    name: undefined,
+    description: undefined,
+  }
 
   return {
     sut,
@@ -35,31 +38,39 @@ function makeSut() {
 }
 
 describe("Todo Validator", () => {
-  it("Should return success with one record and erros with zero records when only name is provided", () => {
+  it("Should return isValid = true and errors with zero records when only name is provided", () => {
     const { sut, validName } = makeSut();
 
-    const { errors, success } = sut.validate(validName)
+    const { errors, isValid } = sut.validate(validName)
 
     expect(errors.length).toBe(0);
-    expect(success.length).toBe(1);
+    expect(isValid).toBe(true);
   });
 
-  it("Should return success with one record and erros with zero records when both params is provided", () => {
+  it("Should return isValid = true erros with zero records when both params is provided", () => {
     const { sut, validNameAndDescription } = makeSut();
 
-    const { errors, success } = sut.validate(validNameAndDescription)
+    const { errors, isValid } = sut.validate(validNameAndDescription)
 
     expect(errors.length).toBe(0);
-    expect(success.length).toBe(1);
+    expect(isValid).toBe(true);
   });
 
-  it("Should return succes with zero records and erros with one record when name only description is provided", () => {
+  it("Should return isValid = false and errors with one record when only description is provided", () => {
     const { sut, withoutName } = makeSut();
 
-    const { errors, success } = sut.validate(withoutName);
+    const { errors, isValid } = sut.validate(withoutName);
 
     expect(errors.length).toBe(1);
-    expect(errors[0].message).toBe("Required");
-    expect(success.length).toBe(0);
+    expect(isValid).toBe(false);
+  });
+
+  it("Should return isValid = false and errors with one record when params is not provided", () => {
+    const { sut, invalidNameAndDescription } = makeSut();
+
+    const { errors, isValid } = sut.validate(invalidNameAndDescription);
+
+    expect(errors.length).toBe(1);
+    expect(isValid).toBe(false);
   });
 });

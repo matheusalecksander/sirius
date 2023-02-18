@@ -6,18 +6,15 @@ import { Validator } from "../../infra/validator/validator-protocol";
 export class TodoService {
   constructor(private readonly validator: Validator) {}
 
-  async createTodo(todos: ICreateTodo) {
-    const { success, errors } = this.validator.validate(todos);
+  async createTodo(todo: ICreateTodo) {
+    const { isValid, errors } = this.validator.validate(todo);
 
-    if (success.length <= 0) {
+    if (!isValid) {
       throw new BadRequestException({
-        statusCode: 400,
         errors
       });
     }
 
-    return {
-      dados: [...success],
-    }
+    return todo
   }
 }

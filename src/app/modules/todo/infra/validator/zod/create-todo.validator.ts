@@ -8,8 +8,7 @@ import { ZodSafeParseResponse } from './zod-safe-parse-response.interface';
 export interface ZodCreateTodoProps extends AnyZodObject {}
 
 export class ZodCreateTodoValidator implements Validator {
-  private errors = [];
-  private success = [];
+  private errorsMessages: string[] = [];
 
   constructor(
     @Inject('ZodCreateTodoProps') private readonly shape: ZodCreateTodoProps,
@@ -23,23 +22,16 @@ export class ZodCreateTodoValidator implements Validator {
     >;
 
     if (!isValid.success) {
-      isValid.error.errors.forEach((error) => {
-        this.errors.push({ message: error.message, data: { ...object } });
-      });
-    }
-
-    if (isValid.success) {
-      this.success.push(isValid.data);
+      isValid.error.issues.forEach((issue) => this.errorsMessages.push(issue.message));
     }
 
     return {
-      success: this.success,
-      errors: this.errors,
-    };
+      isValid: isValid.success,
+      errors: this.errorsMessages,
+    }
   }
 
-  private clear() {
-    this.errors = [];
-    this.success = [];
+  clear() {
+    this.errorsMessages = [];
   }
 }
