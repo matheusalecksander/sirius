@@ -10,7 +10,6 @@ async function bootstrap() {
     },
   }))
   await app.listen(4500);
-  console.log("App is running");
 }
 
 bootstrap();

@@ -8,7 +8,7 @@ import { ZodSafeParseResponse } from './zod-safe-parse-response.interface';
 export interface ZodCreateTodoProps extends AnyZodObject {}
 
 export class ZodCreateTodoValidator implements Validator {
-  private erros = [];
+  private errors = [];
   private success = [];
 
   constructor(
@@ -23,8 +23,8 @@ export class ZodCreateTodoValidator implements Validator {
     >;
 
     if (!isValid.success) {
-      isValid.error.issues.forEach((issue, index) => {
-        this.erros.push({ message: issue.message, index, object: { ...object } });
+      isValid.error.errors.forEach((error) => {
+        this.errors.push({ message: error.message, data: { ...object } });
       });
     }
 
@@ -34,12 +34,12 @@ export class ZodCreateTodoValidator implements Validator {
 
     return {
       success: this.success,
-      errors: this.erros,
+      errors: this.errors,
     };
   }
 
   private clear() {
-    this.erros = [];
+    this.errors = [];
     this.success = [];
   }
 }
