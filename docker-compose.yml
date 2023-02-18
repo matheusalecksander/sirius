@@ -3,29 +3,11 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-      # Only will build development stage from our dockerfile
       target: development
     volumes:
       - .:/usr/src/app
     env_file:
     - .env
-    # Run a command against the development stage of the image
     command: npm run start:dev
     ports:
       - 4500:4500
-    depends_on:
-      - rabbitmq
-  rabbitmq:
-    image: rabbitmq:3.8-management-alpine
-    container_name: 'rabbitmq'
-    ports:
-        - 5673:5673
-        - 15673:15673
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    networks:
-        - rabbitmq_nodejs
-networks:
-  rabbitmq_nodejs:
-    driver: bridge
